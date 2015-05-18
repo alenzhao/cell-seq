@@ -75,9 +75,20 @@ s13data_P7_m = dataprobs_m(:,26);
 s13data_P7_sorted = flipud(s13data_P7_sorted);
 s13genes_P7_sorted = flipud(datagenes(inds));
 
+%cluster analysis
+
+y5 = pdist(P5_data_m', 'euclidean');
+tree5 = linkage(y5);
+dendrogram(tree5);
+
+y7 = pdist(P7_data_m', 'euclidean');
+tree7 = linkage(y7);
+dendrogram(tree7);
+
+
 %use nmf to cluster data
 
-[w5 h5] = nnmf(P5_data_m, 10, );
+[w5 h5] = nnmf(P5_data_m, 10 );
 figure;
 imagesc(h5);
 title('nnmf p5');
