@@ -2,21 +2,13 @@
 
 %% Initialize variables.
 filename = '/home/iamcam/Documents/cell-seq/MATLAB/inDrop/GSM1599494_ES_d0_main.csv';
-g_filename = '/home/iamcam/Documents/cell-seq/MATLAB/inDrop/GSM1599494_ES_d0_genes.csv';
-
 
 %% Format string for each line of text:
- 
-formatSpec = '%s'
-
-%% Open the text file.
-fileID = fopen(filename,'r');
-
-%% Read columns of data according to format string.
-% This call is based on the structure of the file used to generate this
-% code. If an error occurs for a different file, try regenerating the code
-% from the Import Tool.
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'EmptyValue' ,NaN,'HeaderLines' ,startRow-1, 'ReturnOnError', false);
+g_filename = '/home/iamcam/Documents/cell-seq/MATLAB/inDrop/GSM1599494_ES_d0_genes.csv';
+formatSpec = '%s';
+fileID = fopen(g_filename,'r');
+startRow=0;
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'EmptyValue' ,NaN,'HeaderLines' ,startRow, 'ReturnOnError', false);
 
 %% Close the text file.
 fclose(fileID);
@@ -28,7 +20,7 @@ fclose(fileID);
 % script.
 
 %% Create output variable
-m_datam = [dataArray{2:end-1}];
+m_datam = csvread(filename);
 m_genes = dataArray{1};
 
 %% Clear out unused data
@@ -53,4 +45,4 @@ s1genes_sorted = flipud(m_genes(inds));
 [w, h] = nnmf(m_dataprob, 10 );
 figure;
 imagesc(h);
-title('nnmf mouse drop-test 100 STAMPs');
+title('nnmf mouse inDrop');
