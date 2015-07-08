@@ -28,6 +28,14 @@ xlabel('sorted barcodes');
 ylabel('read counts');
 hgsave('read_cumsum.fig')
 
+rev_fraction_sum = rev_counts_sum/rev_counts_sum(end);
+h = figure;
+plot(rev_fraction_sum(1:1500));
+xlabel('sorted barcodes');
+ylabel('cumulative fraction of reads');
+hgsave('fraction_cumsum.fig')
+
+
 % % fit the curve to an exponential
 % 
 % f1 = fit([1:1500]', rev_counts_sum(1:1500), 'exp2');
