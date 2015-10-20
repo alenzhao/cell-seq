@@ -2,7 +2,7 @@
 """
 Created on Fri Jul 17 16:47:14 2015
 
-@author: sisi
+@author: sisichen
 
 
 #######################################
@@ -30,15 +30,44 @@ import gzip
 import json
 
 
-sum_path = os.path.commonprefix([dir_path_fastqs, dir_path_alignment])
-samfilename = '1_TAGATCGC_L001_R1_001_noTA';
+#Getting a file path for the fasta file
+#starts_path = '../../RNAseqdata/DS4-IH/50bpstarts/'
+#alignment_path = '../../RNAseqdata/DS4-IH/50bpalignments/'
+#samfilename = 'IH50'
+#startsfilename = 'IH50_refset'
 
-if os.path.isfile(sum_path+'alignment_starts.txt'):
+starts_path = '../../RNAseqdata/DS-4/starts/'
+alignment_path = '../../RNAseqdata/DS-4/alignments/'
+samfilename = 'DS4_all'
+startsfilename = 'DS4_refset'
+ASfilter=0
+
+gene_list = [
+        'NM_008084', #GAPDH
+        'NM_007393', #	ACTB
+        'NM_008907',#PPIA
+        'NM_013633', #POU5F1
+        'NM_011443', #SOX2
+        'NM_001177354', #MYC
+        'NM_009556', #ZFP42
+        'NM_028016' #NANOG
+        
+#        'NM_008899', #POU3F2
+#        'NM_001165982', #DCAF17
+#        'NM_001081154', #MARF1
+#        'NM_001039483', #TMCO1
+#        'NM_008553', #ASCL1
+#        'NM_023279' #TUBB3
+        ]
+
+
+if os.path.isfile(starts_path+ startsfilename + '_' + 'startsmatrix.txt'):
 	print "alignment_starts.txt already exists.......................................... 100 %"
+
 else:
 
-    gene_counter = 1;
-    sam_file = gzip.open(dir_path_alignment+samfilename+'.sam.gz','rb')
+    gene_counter = 0;
+    sam_file = gzip.open(alignment_path+samfilename+'.sam.gz','rb')
     dict_gene_starts = defaultdict(int)
     
     while True:
@@ -49,85 +78,55 @@ else:
             columns = line.split("\t")
             gene = columns[2]
             startsite = columns[3]
-            if gene != '*':
-                if gene in dict_gene_starts: 
-                    currlist = dict_gene_starts[gene];
-                    currlist.append(startsite);
-                    dict_gene_starts=currlist;
-                else:
-                    dict_gene_counter[gene] = [startsite];
-                    gene_counter +=1;
+            if (gene != '*') and (gene in gene_list):
+                AS_score = int(columns[11][5:])
+                if ASfilter==0: 
+                    AS_score=0
+                if (AS_score>-3):
+                    if gene in dict_gene_starts: 
+                        currlist = dict_gene_starts[gene]
+                        currlist.append(startsite)
+                        dict_gene_starts[gene]=currlist
+                    else:
+                        dict_gene_starts[gene] = [startsite]
+                        gene_counter +=1
                     
                     
     sam_file.close()
     print "Creating list of start sites...\n"
-    maxstarts=1;
-    genes=dict_genes.keys();
+    maxstarts=1
+    genes=dict_gene_starts.keys()
     
     for x in genes:
-        currstarts = size(dict_genes[x]);
-        maxstarts=max(currstarts,maxstarts);
+        currstarts = len(dict_gene_starts[x])
+        maxstarts=max(currstarts,maxstarts)
+
+    print "maxstarts is: " 
+    print maxstarts    
     
     matrix = [[0 for x in range(gene_counter)] for x in range(maxstarts)]
-    for gene_key in dict_genes:
-        col_num = genes.index(gene_key);
+    for gene_key in dict_gene_starts:
+        row_num = genes.index(gene_key)
         sitelist = dict_gene_starts[gene_key]
-        for startsite in sitelist:
-            row_num = sitelist.index(startsite);
-            matrix[rownum]
-        
+        numsites = len(sitelist)
+        print numsites
+        for i in range(0,numsites):
+            matrix[i][row_num] = sitelist[i]
 
-### everything is left off here. need to continue sorting the code above.         
-        
-        
-     while True:
-		line=sam_file.readline()
-		if not line:
-			break
-		else:
-			columns = line.split("\t")
-			gene = columns[2]
-			barcode = barcode_file2.readline()
-			barcode = barcode.replace('\n','')
-			#If read aligned, columns[2] is different from '*'
-			#print gene, barcode
-			if gene != '*' and barcode in dict_barcode_occurences:
-				if gene not in dict_gene_counter:
-					dict_gene_counter[gene] = gene_counter
-					gene_counter+=1
-				if barcode not in dict_barcode_counter:
-					dict_barcode_counter[barcode] = barcode_counter
-					barcode_counter+=1
-				if gene in dict_genes_barcode:
-					if barcode in dict_genes_barcode[gene].keys():
-						dict_genes_barcode[gene][barcode] +=1
-					else:
-						dict_genes_barcode[gene][barcode] = 1
-				else:
-					dict_genes_barcode[gene] = {barcode : 1}
-	barcode_file2.close()
-	sam_file.close()
-	print "Data stored in dictionaries........................................",percent,"%"
-	print "Creating genes-cells matrix...\n"
-	print gene_counter-1, "genes"
-	print barcode_counter-1, "cells"
-	matrix = [[0 for x in range(barcode_counter)] for x in range(gene_counter)]
-	for key_barcode in dict_barcode_counter:
-		col_num = dict_barcode_counter[key_barcode]
-		matrix[0][col_num] = key_barcode
-	for key_gene in dict_genes_barcode:
-		row_num = dict_gene_counter[key_gene]
-		matrix[row_num][0] = key_gene
-		for key_barcode in dict_genes_barcode[key_gene]:
-			col_num = dict_barcode_counter[key_barcode]
-			matrix[row_num][col_num]=dict_genes_barcode[key_gene][key_barcode]
-	print "Genes-cells matrix created.........................................",percent,"%"
-	matrix_file = open(sum_path+'matrix.txt', 'w+')
-	for item in matrix:
-		matrix_file.write('\t'.join([str(i) for i in item])+'\n')
-	matrix_file.close()
+    print "Start sites tabulated"
+    matrix_file = open(starts_path+ startsfilename + '_' + 'startsmatrix.txt', 'w+')
+    for item in matrix:
+        matrix_file.write('\t'.join([str(i) for i in item])+'\n')
+    matrix_file.close()
+    
+    
+    gene_names_file = open(starts_path + startsfilename + '_' + 'startsgenes.txt','w+')
+    gene_names_file.write('\n'.join(genes))
+    gene_names_file.close()
+    
+    
 print "\n"
-print "**********************************"
+print "*****************************************"
 print "***********End Counting Starts***********"
-print "**********************************"
+print "*****************************************"
 print "\n"
