@@ -14,9 +14,14 @@
 # library(R.matlab)
 # 
 # GSEA<-readMat('/home/iamcam/Documents/cell-seq/R/GSEA_lists_trunc.mat')
-# listnames<-unlist(GSEA[[2]])
-# listdesc<-unlist(GSEA[[3]])
-# lists<-lapply(GSEA[[1]], unlist)
+# GO<-readMat('/home/iamcam/Documents/cell-seq/R/GOSets.mat')
+# GOnames<-unlist(GO$path.desc.all)
+# GOlists<-lapply(GO[[2]],unlist)
+# GSEAnames<-unlist(GSEA[[2]])
+# GSEAlists<-lapply(GSEA[[1]], unlist)
+# listnames<-c(GOnames,GSEAnames)
+# lists<-c(GOlists,GSEAlists)
+# save(listnames,lists,file='GS_variables.R')
 
 runGSEA <-function(genelist, totgenelist, j) {
 
@@ -24,7 +29,7 @@ runGSEA <-function(genelist, totgenelist, j) {
   ## Read in GSEA lists
   #############################
   
-  load('/home/iamcam/Documents/cell-seq/R/GSEA_variables.R')
+  load('/home/iamcam/Documents/cell-seq/R/GS_variables.R')
   
   #############################
   ## Calculate number of genes 

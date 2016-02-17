@@ -16,6 +16,7 @@ library(reshape2)
 library(MASS)
 library(RColorBrewer)
 library(gridExtra)
+library(dplyr)
 
 x=matrix(c(exp(-0.2*(-(1:300)/10))*cos(-(1:300)/10),
            exp(-0.2*(-(1:300)/10))*sin(-(1:300)/10)),
@@ -37,7 +38,6 @@ points(pca.approx,pch=4)
 ## Code from Lecture Notes
 ##########################
 
-
 # Find the k smallest entries in each row of an array
 # Inputs: n*p array, p>=k, number of smallest entries to find
 # Output: n*k array of column indices for smallest entries per row 
@@ -47,6 +47,14 @@ smallest.by.rows<-function(m,k) {
   k.smallest = row.orders[,1:k]
   return(k.smallest)
 }
+
+
+
+
+
+
+
+
 
 # Find multiple nearest neighbors in a data frame
 # Inputs: n*p matrix of data vectors, number of neighbors to find, # optional arguments to dist function

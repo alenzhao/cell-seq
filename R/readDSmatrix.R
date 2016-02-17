@@ -1,5 +1,4 @@
-readDSmatrix <-
-function(filename,...){
+readDSmatrix <- function(filename,...){
   
   temp_df <- read.table(filename, header=TRUE, ...)
   gene_info=temp_df[,1]
