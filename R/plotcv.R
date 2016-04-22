@@ -11,7 +11,7 @@ plotcv<-function(figpath, normdf, df_samples, meanthresh, thresh,plotBool){
   allcvdf <- data.frame(gene,numentries,means,sds,vars, cvs, fano)
   rownames(allcvdf)<-NULL
   
-  #remove all data with fewer than 1% entries
+  #remove all data with fewer than 5% entries
   numthresh<-round(0.05*dim(new_df)[1])
   enough_inds<-(allcvdf$numentries>numthresh)
   allcvdf<-allcvdf[enough_inds,]

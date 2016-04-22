@@ -1,3 +1,5 @@
+library(scales)
+
 
 quantile_normalize <- function(x){
   q <- quantile(x,seq(0,1,0.01))
