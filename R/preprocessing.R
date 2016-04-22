@@ -51,7 +51,7 @@ preprocessing<-function(df, df_samples,
   
   # # keep genes based on CV:
   if (is.numeric(CVratio)) {
-    source('~/Documents/Thomson Lab/cell-seq/R/plotcv.R')
+    source('~/Dropbox (Thomson Lab)/analysis/cell-seq/R/plotcv.R')
     CVkeep <- plotcv(figpath,normdf,df_samples,10,CVratio,CVplot) #last parameter is whether or not to save plots
   } else CVkeep <- rep(TRUE,dim(normdf)[2])
    

@@ -16,10 +16,10 @@ processdf <- function(df,
                       knowngenes = c(),
                       riboRemove = TRUE) {
   
-  source('~/Documents/Thomson Lab/cell-seq/R/preprocessing.R')
-  source('~/Documents/Thomson Lab/cell-seq/R/clip_output.R')
-  source('~/Documents/Thomson Lab/cell-seq/R/genenorm.R')
-  source('~/Documents/Thomson Lab/cell-seq/R/remZero.R')
+  source('~/Dropbox (Thomson Lab)/analysis/cell-seq/R/preprocessing.R')
+  source('~/Dropbox (Thomson Lab)/analysis/cell-seq/R/clip_output.R')
+  source('~/Dropbox (Thomson Lab)/analysis/cell-seq/R/genenorm.R')
+  source('~/Dropbox (Thomson Lab)/analysis/cell-seq/R/remZero.R')
 
   if (length(inds)==1) {
     n <- dim(df_samples)[1]

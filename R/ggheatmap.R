@@ -8,7 +8,7 @@ ggheatmap<-function(H, xname='cell', yname='module', cols=jet.colors(7)) {
   
   p <- ggplot(Hm, aes(x,y)) +
     geom_tile(aes(fill = value)) +
-    scale_fill_gradientn(colors = cols) +
+    scale_fill_gradientn(colours = cols) +
     scale_x_discrete(breaks=NULL, name=xname)+
     scale_y_discrete(name=yname)
   
